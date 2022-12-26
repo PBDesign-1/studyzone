@@ -1,0 +1,19 @@
+{
+  "name": "studyzone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PB-Design-1/studyzone.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PB-Design-1/studyzone/issues"
+  },
+  "homepage": "https://github.com/PB-Design-1/studyzone#readme"
+}
