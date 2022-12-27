@@ -2,20 +2,19 @@ const MongoClient = require('mongodb').MongoClient
 require('dotenv').config();
 
 class connection {
-    static async open(){
-        if(this.db) {
-            return this.db
-        }
-        try {
-            this.db = await MongoClient.connect(this.url, { useNewUrlParser: true, useUnifiedTopology: true });
-            return this.db
-        } catch (err){
-            console.log(err)
-        }
+
+    static async open() {
+        if (this.db) return this.db
+        this.db = await MongoClient.connect(this.url, this.options)
+        // console.log(await this.db.db("studyzone").collection("subjects").findOne({}))
+        return this.db
     }
+
 }
 
-connection.url = process.env.MONGO_URI;
-connection.db = null;
+connection.db = null
+connection.url = process.env.Mongo_URI
+
+
 
 module.exports = {connection};
