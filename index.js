@@ -5,6 +5,7 @@ const express = require('express')
 const path = require('path');
 const app = express();
 const cors = require("cors") //delete
+app.use(express.json());
 app.use(cors())
 require('dotenv').config();
 
