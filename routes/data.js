@@ -13,7 +13,7 @@ router.get("/subjects", async (req, res)=>{
         const subjectsRaw = await db.collection("subjects").find({})
         const subjects = await subjectsRaw.toArray()
     
-        const subjectsFormated = subjects.map(s=>{return {name: s.name, stackNumber: s.stacks.length}})
+        const subjectsFormated = subjects.map(s=>{return {_id: s._id, name: s.name, stackNumber: s.stacks.length}})
     
         res.json({success: true, response: {
             subjectsFormated
@@ -36,10 +36,15 @@ router.get("/stacks/:subjectID", async (req, res)=>{
 })
 
 
-router.get("/indexcard", (req ,res)=>{
+router.get("/indexcards/", (req ,res)=>{
+    const {subjectId, stackName} = req.params;
+
     tryCatch(res, async ()=>{
+        const subject = db.collection("subjects").find({_id: ObjectId(subjectId)})
+        const stack = subject.stacks.find(s=>s.name == stackName)
+
         res.json({success: true, response: {
-            
+            stack
         }})        
     })
 
