@@ -5,7 +5,7 @@ class connection {
 
     static async open() {
         if (this.db) return this.db
-        this.db = await MongoClient.connect(this.url, this.options)
+        this.db = await MongoClient.connect(process.env.Mongo_URI)
         // console.log(await this.db.db("studyzone").collection("subjects").findOne({}))
         return this.db
     }
@@ -13,7 +13,7 @@ class connection {
 }
 
 // connection.db = null
-connection.url = process.env.Mongo_URI
+// connection.url = process.env.Mongo_URI
 
 
 
