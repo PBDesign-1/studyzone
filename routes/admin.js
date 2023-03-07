@@ -92,22 +92,23 @@ router.put("/stack", (req, res) => {
 
 
 
-router.post("/indexcard", (req, res) => {
-    const { key, subjectId, stackName, question, answer } = req.body;
+router.post("/indexcards", (req, res) => {
+    const { key, subjectId, stackName, indexcards } = req.body;
 
     tryCatch(res, async () => {
         authCheck(res, key, async () => {
-            let indexcards;
+            let update;
             const subject = await db.collection("subjects").findOne({ _id: ObjectId(subjectId) })
             const stackExists = !!subject ? !!subject.stacks.find(s => s.name == stackName) : false
+            const correctForm = indexcards.map(i => typeof i.answer == "string" & typeof i.question == "string")
 
-            if ([subjectId, stackName, question, answer].every((x) => !!x && typeof x == "string")) {
-                indexcards = await db.collection("subjects").updateOne({ _id: ObjectId(subjectId) }, { $push: { "stacks.$[s].indexcards": { answer, question, tip: "" } } }, { arrayFilters: [{ "s.name": stackName }] })
+            if ([subjectId, stackName].every((x) => !!x && typeof x == "string") && Array.isArray(indexcards) && correctForm) {
+                update = await db.collection("subjects").updateOne({ _id: ObjectId(subjectId) }, { $push: { "stacks.$[s].indexcards": { $each: indexcards } } }, { arrayFilters: [{ "s.name": stackName }] })
             }
 
             console.log(indexcards)
             res.json({
-                success: !!indexcards, response: {
+                success: !!update, response: {
 
                 }
             })
@@ -116,34 +117,34 @@ router.post("/indexcard", (req, res) => {
 })
 
 
-router.put("/indexcard", (req, res) => {
-    const { key } = req.body;
+// router.put("/indexcard", (req, res) => {
+//     const { key } = req.body;
 
-    tryCatch(res, async () => {
-        authCheck(res, key, async () => {
-            res.json({
-                success: true, response: {
+//     tryCatch(res, async () => {
+//         authCheck(res, key, async () => {
+//             res.json({
+//                 success: true, response: {
 
-                }
-            })
-        })
-    })
-})
+//                 }
+//             })
+//         })
+//     })
+// })
 
 
-router.delete("/indexcard", (req, res) => {
-    const { key } = req.body;
+// router.delete("/indexcard", (req, res) => {
+//     const { key } = req.body;
 
-    tryCatch(res, async () => {
-        authCheck(res, key, async () => {
-            res.json({
-                success: true, response: {
+//     tryCatch(res, async () => {
+//         authCheck(res, key, async () => {
+//             res.json({
+//                 success: true, response: {
 
-                }
-            })
-        })
-    })
-})
+//                 }
+//             })
+//         })
+//     })
+// })
 
 
 

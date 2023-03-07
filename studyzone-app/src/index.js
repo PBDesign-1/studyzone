@@ -4,16 +4,17 @@ import './index.css';
 import App from './App';
 // import reportWebVitals from './reportWebVitals';
 import { Route, BrowserRouter, Routes } from 'react-router-dom';
+import Learn from './views/learn/learn';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
     <Routes>
-      <Route path="/" element={<App />} exact />
-      <Route path="/stapel" element={<App />} />
-      <Route path="/lernen/:stapel" element={<App />} />  
-      <Route path="/" element={<App />} />  
+      {/* <Route path="/" element={<App />} exact /> */}
+      {/* <Route path="/stapel" element={<App />} /> */}
+      <Route path="/lernen/:subjectId/:stackName/" element={<Learn />} />  
+      {/* <Route path="/" element={<App />} />   */}
     </Routes>
     </BrowserRouter>
   </React.StrictMode>

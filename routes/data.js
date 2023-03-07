@@ -36,12 +36,14 @@ router.get("/stacks/:subjectID", async (req, res)=>{
 })
 
 
-router.get("/indexcards/", (req ,res)=>{
-    const {subjectId, stackName} = req.params;
+router.get("/indexcards/:subjectId/:stackName", (req ,res)=>{
+    let {subjectId, stackName} = req.params;
+    const stackNameReplaced = stackName.replace(/_/gi, " ")
 
     tryCatch(res, async ()=>{
-        const subject = db.collection("subjects").find({_id: ObjectId(subjectId)})
-        const stack = subject.stacks.find(s=>s.name == stackName)
+        const subject = await db.collection("subjects").findOne({_id: ObjectId(subjectId)})
+        console.log(subject, stackNameReplaced)
+        const stack = subject.stacks.find(s=>s.name == stackNameReplaced)
 
         res.json({success: true, response: {
             stack
