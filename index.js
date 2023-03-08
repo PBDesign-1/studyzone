@@ -1,5 +1,4 @@
-const {connection} = require('./mongo/connection')
-connection.open()
+
 
 const express = require('express')
 const path = require('path');
@@ -8,6 +7,8 @@ const cors = require("cors") //delete
 app.use(express.json());
 app.use(cors())
 require('dotenv').config();
+
+const {db} = require('./mongo/connection')
 
 
 setTimeout(()=>{
@@ -37,5 +38,5 @@ setTimeout(()=>{
     app.listen(PORT, ()=>{
         console.log("Server started at Port: " + PORT)
     })
-}, 1000)
+}, 2000)
 

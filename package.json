@@ -28,5 +28,11 @@
     "mongodb-connection-string-url": "^2.6.0",
     "node-fetch": "^3.3.0",
     "path": "^0.12.7"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --single-quote --write",
+      "eslint --fix"
+    ]
   }
 }

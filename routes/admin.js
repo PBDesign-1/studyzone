@@ -3,8 +3,7 @@ const { ObjectId } = require("mongodb");
 const { tryCatch, authCheck } = require("../basic/shotcuts");
 const router = Router()
 const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fetch(...args))
-const { connection } = require("../mongo/connection")
-const db = connection.db.db("studyzone")
+const {db} = require("../mongo/connection.js")
 
 router.get("/authCheck", (req, res) => {
     res.json({

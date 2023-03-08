@@ -3,9 +3,7 @@ const { ObjectId } = require("mongodb");
 const { tryCatch } = require("../basic/shotcuts");
 const router = Router()
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const {connection} = require("../mongo/connection")
-connection.open()
-const db = connection.db.db("studyzone")
+const {db} = require("../mongo/connection.js")
 
 
 router.get("/subjects", async (req, res)=>{
