@@ -27,22 +27,23 @@ db.once("open", function () {
     const admin = require("./routes/admin")
     app.use("/data", data)
     app.use("/admin", admin)
-    app.use(express.static(path.join(__dirname, './studyzone-app/build')))
-    app.use(express.urlencoded({extended: true}))
+    app.use(express.static("public"));
+    // app.use(express.static(path.join(__dirname, './studyzone-app/build')))
+    app.use(express.static(path.join(__dirname, "studyzone-app", "build")));
     const PORT = process.env.PORT || 3000
     
     
     
-    app.get("/edit", (req, res)=>{
-        const {key} = req.body
-        if(key == process.env.KEY){
-            res.sendFile(path.join(__dirname, "./studyzone-app/build/index.html"))
-        }else {
-            res.redirect("/")
-        }
-    })
+    // app.get("/edit", (req, res)=>{
+    //     const {key} = req.body
+    //     if(key == process.env.KEY){
+    //         res.sendFile(path.join(__dirname, "public", "index.html"));
+    //     }else {
+    //         res.redirect("/")
+    //     }
+    // })
     app.get("*", (req, res)=>{
-        res.sendFile(path.join(__dirname, "./studyzone-app/build/index.html"))
+        res.sendFile(path.join(__dirname, "studyzone-app", "build", "index.html"));
     })
     
     
