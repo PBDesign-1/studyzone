@@ -3,7 +3,8 @@ const { ObjectId } = require("mongodb");
 const { tryCatch, authCheck } = require("../basic/shotcuts");
 const router = Router()
 const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fetch(...args))
-const {db} = require("../mongo/connection.js")
+const Subjects = require("../mongo/models.js")
+
 
 router.get("/authCheck", (req, res) => {
     res.json({
@@ -17,7 +18,7 @@ router.get("/authCheck", (req, res) => {
 
 
 router.post("/stack", async (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
     try {
         tryCatch(res, async () => {
             const { key, subjectId, name, questionName, answerName } = req.body;
@@ -25,12 +26,12 @@ router.post("/stack", async (req, res) => {
             authCheck(res, key, async () => {
                 let insert;
                 if ([name, questionName, answerName, subjectId].every(x => !!x && typeof x == "string")) {
-                    const subject = await db.collection("subjects").findOne({ _id: ObjectId(subjectId) })
-                    console.log(subject)
+                    const subject = await Subjects.findOne({ _id: ObjectId(subjectId) })
                     const stackExists = !!subject.stacks.find(s => s.name == name)
 
+                    // console.log(subject)
                     if (!stackExists) {
-                        insert = await db.collection("subjects").updateOne(
+                        insert = await Subjects.findOneAndUpdate(
                             { _id: ObjectId(subjectId) },
                             {
                                 $push: {
@@ -41,14 +42,17 @@ router.post("/stack", async (req, res) => {
                                         answerName
                                     }
                                 }
+                            },
+                            {
+                                returnOriginal: false,
+                                returnDocument: "after"
                             });
                     }
 
                 }
 
-                console.log(insert)
 
-                res.json({ success: !!insert ? insert.modifiedCount > 0 : false, response: {} })
+                res.json({ success: !!insert ? !!insert.stacks.find(s => s.name == name) : false, response: {} })
             })
         })
     } catch (err) {
@@ -69,12 +73,12 @@ router.put("/stack", (req, res) => {
     tryCatch(res, async () => {
         authCheck(res, key, async () => {
 
-            const subject = await db.collection("subjects").findOne({ _id: ObjectId(subjectId) })
+            const subject = await Subjects.findOne({ _id: ObjectId(subjectId) })
             console.log(subject)
             const stackExists = !!subject ? !!subject.stacks.find(s => s.name == stackName) : false
 
             if (stackExists && typeof changes == "object") {
-                const updateStack = await db.collection("subjects").updateOne({ _id: ObjectId(subjectId) }, { $set: { "stacks.$[s]": { ...subject.stacks.find(s => s.name == stackName), ...changes } } }, { arrayFilters: [{ "s.name": stackName }] })
+                const updateStack = await Subjects.findByIdAndUpdate({ _id: ObjectId(subjectId) }, { $set: { "stacks.$[s]": { ...subject.stacks.find(s => s.name == stackName), ...changes } } }, { arrayFilters: [{ "s.name": stackName }] })
 
                 res.json({ success: true, response: {} })
             } else {
@@ -97,12 +101,12 @@ router.post("/indexcards", (req, res) => {
     tryCatch(res, async () => {
         authCheck(res, key, async () => {
             let update;
-            const subject = await db.collection("subjects").findOne({ _id: ObjectId(subjectId) })
+            const subject = await Subjects.findOne({ _id: ObjectId(subjectId)})
             const stackExists = !!subject ? !!subject.stacks.find(s => s.name == stackName) : false
             const correctForm = indexcards.map(i => typeof i.answer == "string" & typeof i.question == "string")
 
             if ([subjectId, stackName].every((x) => !!x && typeof x == "string") && Array.isArray(indexcards) && correctForm) {
-                update = await db.collection("subjects").updateOne({ _id: ObjectId(subjectId) }, { $push: { "stacks.$[s].indexcards": { $each: indexcards } } }, { arrayFilters: [{ "s.name": stackName }] })
+                update = await Subjects.findByIdAndUpdate({ _id: ObjectId(subjectId) }, { $push: { "stacks.$[s].indexcards": { $each: indexcards } } }, { arrayFilters: [{ "s.name": stackName }] })
             }
 
             console.log(indexcards)

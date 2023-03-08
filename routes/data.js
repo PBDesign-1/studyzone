@@ -3,13 +3,11 @@ const { ObjectId } = require("mongodb");
 const { tryCatch } = require("../basic/shotcuts");
 const router = Router()
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const {db} = require("../mongo/connection.js")
-
+const Subjects = require("../mongo/models.js")
 
 router.get("/subjects", async (req, res)=>{
     tryCatch(res, async ()=>{
-        const subjectsRaw = await db.collection("subjects").find({})
-        const subjects = await subjectsRaw.toArray()
+        const subjects = await Subjects.find({})
     
         const subjectsFormated = subjects.map(s=>{return {_id: s._id, name: s.name, stackNumber: s.stacks.length}})
     
@@ -25,7 +23,7 @@ router.get("/stacks/:subjectID", async (req, res)=>{
     const {subjectID} = req.params
 
     tryCatch(res, async ()=>{
-        let subject = await db.collection("subjects").findOne({_id: ObjectId(subjectID)})
+        let subject = await Subjects.findOne({_id: ObjectId(subjectID)})
 
         res.json({success: true, response: {
             subject
@@ -39,7 +37,7 @@ router.get("/indexcards/:subjectId/:stackName", (req ,res)=>{
     const stackNameReplaced = stackName.replace(/_/gi, " ")
 
     tryCatch(res, async ()=>{
-        const subject = await db.collection("subjects").findOne({_id: ObjectId(subjectId)})
+        const subject = await Subjects.findOne({_id: ObjectId(subjectId)})
         console.log(subject, stackNameReplaced)
         const stack = subject.stacks.find(s=>s.name == stackNameReplaced)
 

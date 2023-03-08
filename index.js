@@ -7,11 +7,22 @@ const cors = require("cors") //delete
 app.use(express.json());
 app.use(cors())
 require('dotenv').config();
+const mongoose = require("mongoose");
 
-const {db} = require('./mongo/connection')
+mongoose.connect(
+  process.env.MONGO_URI, 
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }
+);
 
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error: "));
+db.once("open", function () {
+  console.log("Connected successfully");
+});
 
-setTimeout(()=>{
     const data = require("./routes/data")
     const admin = require("./routes/admin")
     app.use("/data", data)
@@ -38,5 +49,4 @@ setTimeout(()=>{
     app.listen(PORT, ()=>{
         console.log("Server started at Port: " + PORT)
     })
-}, 2000)
 
