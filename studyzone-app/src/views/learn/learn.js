@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import "./learn.css";
 
 function Learn () {
+    var domain = "https://puce-upset-hare.cyclic.app"
+
     const [stack, setStack] = useState()
     const [index, setIndex] = useState(0)
     const [front, setFront] = useState(true)
@@ -20,7 +22,7 @@ function Learn () {
 
     useEffect(()=>{
         console.log(`/data/indexcards/${subjectId}/${stackName}`)
-        fetch(`/data/indexcards/${subjectId}/${stackName}`)
+        fetch(domain + `/data/indexcards/${subjectId}/${stackName}`)
         // .then(res=>console.log(res))
         .then(res=>res.json())
         .then(res=>{

@@ -21,7 +21,7 @@ router.post("/stack", async (req, res) => {
     // console.log(req.body)
     try {
         tryCatch(res, async () => {
-            const { key, subjectId, name, questionName, answerName } = req.body;
+            const { key, subjectId, name, questionName, answerName, changable } = req.body;
 
             authCheck(res, key, async () => {
                 let insert;
@@ -39,7 +39,8 @@ router.post("/stack", async (req, res) => {
                                         name,
                                         indexcards: [],
                                         questionName,
-                                        answerName
+                                        answerName,
+                                        changable: !!changable
                                     }
                                 }
                             },
